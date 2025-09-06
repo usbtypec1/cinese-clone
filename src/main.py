@@ -19,6 +19,8 @@ async def main() -> None:
     dispatcher = Dispatcher()
     dispatcher.include_routers(*get_routers())
 
+    dispatcher['admin_user_ids'] = settings.telegram_bot.admin_chat_ids
+
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
 
     await dispatcher.start_polling(bot)
