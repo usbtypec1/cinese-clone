@@ -4,6 +4,7 @@ from aiogram import Bot, Dispatcher
 from dishka import make_async_container
 from dishka.integrations.aiogram import setup_dishka
 
+from presentation.telegram.handlers.registry import get_routers
 from setup.config.settings import load_app_settings, AppSettings
 
 
@@ -16,6 +17,7 @@ async def main() -> None:
 
     bot = Bot(token=settings.telegram_bot.token)
     dispatcher = Dispatcher()
+    dispatcher.include_routers(*get_routers())
 
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
 
