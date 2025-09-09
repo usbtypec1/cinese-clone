@@ -3,8 +3,8 @@ from typing import Any
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class CreateAdventisementInteractor:
-    advertisement_repository: Any
+class CreateAdvertisementInteractor:
+    advertisement_gateway: Any
 
     def execute(self) -> None:
         pass

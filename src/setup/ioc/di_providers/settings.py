@@ -1,5 +1,6 @@
 from dishka import Provider, Scope, from_context, provide
 
+from setup.config.database import DatabaseSettings
 from setup.config.settings import AppSettings
 from setup.config.telegram_bot import TelegramBotSettings
 
@@ -10,5 +11,15 @@ class SettingsProvider(Provider):
     settings = from_context(provides=AppSettings, scope=Scope.APP)
 
     @provide
-    def provide_telegram_bot(self, settings: AppSettings) -> TelegramBotSettings:
+    def provide_telegram_bot(
+        self,
+        settings: AppSettings,
+    ) -> TelegramBotSettings:
         return settings.telegram_bot
+
+    @provide
+    def provide_database_settings(
+        self,
+        settings: AppSettings,
+    ) -> DatabaseSettings:
+        return settings.database
