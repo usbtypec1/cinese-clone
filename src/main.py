@@ -3,7 +3,9 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from dishka import make_async_container
 from dishka.integrations.aiogram import setup_dishka
+from sqlalchemy.ext.asyncio import AsyncEngine
 
+from infrastructure.sqla.models.base import Base
 from presentation.telegram.handlers.registry import get_routers
 from setup.config.settings import load_app_settings, AppSettings
 
@@ -22,6 +24,10 @@ async def main() -> None:
     dispatcher['admin_user_ids'] = settings.telegram_bot.admin_chat_ids
 
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
+
+    engine = await container.get(AsyncEngine)
+    async with engine.begin() as conn:
+        await conn.run_sync(Base.metadata.create_all)
 
     await dispatcher.start_polling(bot)
 

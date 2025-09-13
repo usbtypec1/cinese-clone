@@ -16,3 +16,4 @@ class Category(Base):
         default=None,
     )
     name: Mapped[str] = mapped_column(String(64))
+    hashtag: Mapped[str] = mapped_column(String(32), unique=True)

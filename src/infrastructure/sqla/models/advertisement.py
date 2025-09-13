@@ -1,37 +1,21 @@
 from decimal import Decimal
-from enum import StrEnum
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from domain.enums.advertisement_type import AdvertisementType
+from domain.enums.delivery_option import DeliveryOption
+from domain.enums.product_condition import ProductCondition
 from infrastructure.sqla.models.base import Base
-from infrastructure.sqla.models.city import City
-from infrastructure.sqla.models.user import User
 
 
 if TYPE_CHECKING:
     from infrastructure.sqla.models.advertisement_photo import (  # noqa: F401
         AdvertisementPhoto
     )
-
-
-class AdvertisementType(StrEnum):
-    SELL = 'sell'
-    BUY = 'buy'
-    EXCHANGE = 'exchange'
-
-
-class ProductCondition(StrEnum):
-    NEW = 'new'
-    USED = 'used'
-
-
-class DeliveryOption(StrEnum):
-    NO_DELIVERY = 'no_delivery'
-    COUNTRY = 'across_country'
-    CIS = 'cis'
-    WORLD = 'world'
+    from infrastructure.sqla.models.city import City  # noqa: F401
+    from infrastructure.sqla.models.user import User  # noqa: F401
 
 
 class Advertisement(Base):
@@ -53,8 +37,9 @@ class Advertisement(Base):
     city_id: Mapped[int] = mapped_column(
         ForeignKey('cities.id', ondelete='CASCADE'),
     )
+    is_phone_number_visible: Mapped[bool]
 
-    user: Mapped[User] = relationship(
+    user: Mapped['User'] = relationship(
         'User',
         back_populates='transactions',
     )
@@ -63,13 +48,13 @@ class Advertisement(Base):
         back_populates='advertisement',
         cascade='all, delete-orphan',
     )
-    city: Mapped[City] = relationship(
+    city: Mapped['City'] = relationship(
         'City',
         back_populates='advertisements',
     )
 
     __table_args__ = (
         CheckConstraint(
-            "amount >= 0", name="ck_advertisements_price_non_negative",
+            "price >= 0", name="ck_advertisements_price_non_negative",
         ),
     )

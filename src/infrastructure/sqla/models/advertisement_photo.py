@@ -1,8 +1,15 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from infrastructure.sqla.models.advertisement import Advertisement
 from infrastructure.sqla.models.base import Base
+
+
+if TYPE_CHECKING:
+    from infrastructure.sqla.models.advertisement import (  # noqa: F401
+        Advertisement,
+    )
 
 
 class AdvertisementPhoto(Base):
@@ -18,7 +25,7 @@ class AdvertisementPhoto(Base):
     file_id: Mapped[str]
     file_unique_id: Mapped[str]
 
-    advertisement: Mapped[Advertisement] = relationship(
+    advertisement: Mapped['Advertisement'] = relationship(
         'Advertisement',
         back_populates='photos',
     )
