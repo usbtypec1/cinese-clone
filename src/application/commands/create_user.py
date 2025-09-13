@@ -19,7 +19,7 @@ class CreateUserRequest:
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class CreateUserCommand:
+class CreateUserInteractor:
     user_command_gateway: UserCommandGateway
     flusher: Flusher
     transaction_manager: TransactionManager
