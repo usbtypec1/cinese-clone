@@ -35,6 +35,9 @@ class Advertisement(Base):
     )
     is_phone_number_visible: Mapped[bool]
     status: Mapped[AdvertisementStatus]
+    category_id: Mapped[int] = mapped_column(
+        ForeignKey('categories.id', ondelete='CASCADE'),
+    )
 
     user: Mapped[User] = relationship('User', back_populates='advertisements')
     city: Mapped[City] = relationship('City', back_populates='advertisements')

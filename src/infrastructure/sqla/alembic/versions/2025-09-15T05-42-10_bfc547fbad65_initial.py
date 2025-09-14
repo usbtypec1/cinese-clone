@@ -1,8 +1,8 @@
 """Initial
 
-Revision ID: e27f27893f57
+Revision ID: bfc547fbad65
 Revises: 
-Create Date: 2025-09-14 02:35:59.847672
+Create Date: 2025-09-15 05:42:10.167062
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = 'e27f27893f57'
+revision: str = 'bfc547fbad65'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -60,9 +60,12 @@ def upgrade() -> None:
     sa.Column('delivery_option', sa.Enum('NO_DELIVERY', 'COUNTRY', 'CIS', 'WORLD', name='deliveryoption'), nullable=False),
     sa.Column('city_id', sa.Integer(), nullable=False),
     sa.Column('is_phone_number_visible', sa.Boolean(), nullable=False),
+    sa.Column('status', sa.Enum('NOT_PUBLISHED', 'AWAITING_MODERATION', 'PUBLISHED', 'REJECTED', 'ARCHIVED', name='advertisementstatus'), nullable=False),
+    sa.Column('category_id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.Column('updated_at', sa.DateTime(), server_default=sa.text('now()'), nullable=False),
     sa.CheckConstraint('price >= 0', name='ck_advertisements_price_non_negative'),
+    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['city_id'], ['cities.id'], ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')

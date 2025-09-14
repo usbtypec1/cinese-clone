@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey, String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.sqla.models.base import Base
 
@@ -17,3 +17,8 @@ class Category(Base):
     )
     name: Mapped[str] = mapped_column(String(64))
     hashtag: Mapped[str] = mapped_column(String(32), unique=True)
+
+    advertisements: Mapped[list["Advertisement"]] = relationship(
+        back_populates="category",
+        cascade="all, delete-orphan",
+    )

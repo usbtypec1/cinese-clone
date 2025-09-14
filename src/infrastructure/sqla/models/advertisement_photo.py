@@ -1,5 +1,5 @@
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from infrastructure.sqla.models.base import Base
 
@@ -16,3 +16,7 @@ class AdvertisementPhoto(Base):
     )
     file_id: Mapped[str]
     file_unique_id: Mapped[str]
+
+    advertisement: Mapped["Advertisement"] = relationship(
+        back_populates="photos",
+    )
