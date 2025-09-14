@@ -6,7 +6,13 @@ from application.commands.create_advertisement import (
     CreateAdvertisementInteractor,
 )
 from application.commands.create_user import CreateUserInteractor
+from application.commands.read_community_url import ReadCommunityUrlCommand
+from application.commands.read_rules_text import ReadRulesTextCommand
+from application.commands.read_support_text import ReadSupportTextCommand
 from application.commands.send_to_admins import SendToTelegramAdminsInteractor
+from application.commands.set_community_url import SetCommunityUrlCommand
+from application.commands.set_rules_text import SetRulesTextCommand
+from application.commands.set_support_text import SetSupportTextCommand
 from application.common.ports.advertisement_command_gateway import (
     AdvertisementCommandGateway,
 )
@@ -18,6 +24,8 @@ from application.common.ports.category_query_gateway import (
 )
 from application.common.ports.city_query_gateway import CityQueryGateway
 from application.common.ports.flusher import Flusher
+from application.common.ports.texts_command_gateway import TextsCommandGateway
+from application.common.ports.texts_query_gateway import TextsQueryGateway
 from application.common.ports.transaction_manager import TransactionManager
 from application.common.ports.user_command_gateway import UserCommandGateway
 from application.queries.list_categories import ListCategoriesQuery
@@ -34,6 +42,8 @@ from infrastructure.adapters.advertisement_reader import (
 from infrastructure.adapters.category_reader import SqlaCategoryReader
 from infrastructure.adapters.city_reader import SqlaCityReader
 from infrastructure.adapters.flusher import SqlaFlusher
+from infrastructure.adapters.texts_data_mapper import RedisTextsDataMapper
+from infrastructure.adapters.texts_reader import RedisTextsReader
 from infrastructure.adapters.transaction_manager import SqlaTransactionManager
 from infrastructure.adapters.user_data_mapper import SqlaUserDataMapper
 from setup.config.telegram_bot import TelegramBotSettings
@@ -63,6 +73,7 @@ class ApplicationProvider(Provider):
         provides=Flusher,
     )
 
+    # Command gateways
     user_command_gateway = provide(
         source=SqlaUserDataMapper,
         provides=UserCommandGateway,
@@ -71,6 +82,12 @@ class ApplicationProvider(Provider):
         source=SqlaAdvertisementDataMapper,
         provides=AdvertisementCommandGateway,
     )
+    texts_command_gateway = provide(
+        source=RedisTextsDataMapper,
+        provides=TextsCommandGateway,
+    )
+
+    # Query gateways
     advertisement_query_gateway = provide(
         source=SqlaAdvertisementReader,
         provides=AdvertisementQueryGateway,
@@ -83,14 +100,24 @@ class ApplicationProvider(Provider):
         source=SqlaCityReader,
         provides=CityQueryGateway,
     )
+    texts_query_gateway = provide(
+        source=RedisTextsReader,
+        provides=TextsQueryGateway,
+    )
 
     commands = provide_all(
         CreateUserInteractor,
         CreateAdvertisementInteractor,
+        SetRulesTextCommand,
+        SetSupportTextCommand,
+        SetCommunityUrlCommand,
     )
 
     queries = provide_all(
         ListCategoriesQuery,
         ListCitiesQuery,
         ReadAdvertisementByIdQuery,
+        ReadRulesTextCommand,
+        ReadSupportTextCommand,
+        ReadCommunityUrlCommand,
     )

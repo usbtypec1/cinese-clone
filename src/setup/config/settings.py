@@ -4,12 +4,14 @@ import tomllib
 from pydantic import BaseModel
 
 from setup.config.database import DatabaseSettings
+from setup.config.redis import RedisSettings
 from setup.config.telegram_bot import TelegramBotSettings
 
 
 class AppSettings(BaseModel):
     telegram_bot: TelegramBotSettings
     database: DatabaseSettings
+    redis: RedisSettings
 
 
 def load_app_settings() -> AppSettings:

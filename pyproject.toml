@@ -9,5 +9,6 @@ dependencies = [
     "alembic>=1.16.5",
     "dishka>=1.6.0",
     "psycopg[binary]>=3.2.9",
+    "redis>=6.4.0",
     "sqlalchemy[asyncio]>=2.0.43",
 ]
