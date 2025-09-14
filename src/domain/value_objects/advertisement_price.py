@@ -15,7 +15,7 @@ class AdvertisementPrice(ValueObject):
     value: Decimal
 
     def __post_init__(self):
-        super().__post_init__()
+        super(AdvertisementPrice, self).__post_init__()
         self._validate_price_non_negative()
 
     def _validate_price_non_negative(self) -> None:

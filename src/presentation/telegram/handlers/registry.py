@@ -6,10 +6,12 @@ from presentation.telegram.handlers.start import (
     user_start_router,
 )
 from presentation.telegram.handlers.advertisement import advertisement_router
+from presentation.telegram.handlers.register_user import register_user_router
 
 
 def get_routers() -> tuple[Router, ...]:
     return (
+        register_user_router,
         admin_start_router,
         user_start_router,
         payments_router,

@@ -17,7 +17,7 @@ class FileId(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(FileId, self).__post_init__()
         self._validate_id_length()
 
     def _validate_id_length(self) -> None:

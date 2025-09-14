@@ -115,7 +115,7 @@ class SqlaAdvertisementReader(AdvertisementQueryGateway):
     @override
     async def count_of_user_advertisements(self, user_id: int) -> int:
         statement = (
-            select(func.count(SqlaAdvertisement))
+            select(func.count(SqlaAdvertisement.id))
             .where(SqlaAdvertisement.user_id == user_id)
         )
         try:

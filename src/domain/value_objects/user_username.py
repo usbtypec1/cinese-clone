@@ -17,7 +17,7 @@ class UserUsername(ValueObject):
     value: str | None
 
     def __post_init__(self):
-        super().__post_init__()
+        super(UserUsername, self).__post_init__()
         self._validate_username_length()
 
     def _validate_username_length(self) -> None:

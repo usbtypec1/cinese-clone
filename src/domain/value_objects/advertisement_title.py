@@ -18,7 +18,7 @@ class AdvertisementTitle(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(AdvertisementTitle, self).__post_init__()
         self._validate_title_length()
 
     def _validate_title_length(self) -> None:

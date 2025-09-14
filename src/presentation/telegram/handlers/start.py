@@ -36,7 +36,7 @@ async def on_start_command(
     read_current_user_query: FromDishka[ReadCurrentUserQuery],
 ) -> None:
     try:
-        await read_current_user_query.execute()
+        user = await read_current_user_query.execute()
     except UserNotFoundByIdError:
         await state.set_state(RegisterUserStates.name)
         view = RegisterUserNameView()
@@ -49,7 +49,7 @@ async def on_start_command(
     start_text = await read_start_text_query.execute()
     community_url = await read_community_url_query.execute()
     view = MenuView(
-        user=message.from_user,
+        user=user,
         advertisements_count=advertisements_count,
         start_text=start_text,
         balance=Decimal(0),

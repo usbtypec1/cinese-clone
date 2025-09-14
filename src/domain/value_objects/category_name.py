@@ -17,7 +17,7 @@ class CategoryName(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(CategoryName, self).__post_init__()
         self._validate_name_length()
 
     def _validate_name_length(self) -> None:

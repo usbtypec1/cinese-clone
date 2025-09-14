@@ -17,7 +17,7 @@ class CategoryHashtag(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(CategoryHashtag, self).__post_init__()
         self._validate_hashtag_length()
 
     def _validate_hashtag_length(self) -> None:

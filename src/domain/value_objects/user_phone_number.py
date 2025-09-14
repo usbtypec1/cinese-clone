@@ -17,7 +17,7 @@ class UserPhoneNumber(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(UserPhoneNumber, self).__post_init__()
         self._validate_phone_length()
 
     def _validate_phone_length(self) -> None:

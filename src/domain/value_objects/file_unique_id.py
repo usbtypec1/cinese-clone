@@ -17,7 +17,7 @@ class FileUniqueId(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(FileUniqueId, self).__post_init__()
         self._validate_unique_id_length()
 
     def _validate_unique_id_length(self) -> None:

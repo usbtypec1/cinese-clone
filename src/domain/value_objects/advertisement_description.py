@@ -18,7 +18,7 @@ class AdvertisementDescription(ValueObject):
     value: str
 
     def __post_init__(self):
-        super().__post_init__()
+        super(AdvertisementDescription, self).__post_init__()
         self._validate_description_length()
 
     def _validate_description_length(self) -> None:
