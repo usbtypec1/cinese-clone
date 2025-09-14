@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import override
 
-from sqlalchemy import select, ScalarResult
+from sqlalchemy import select, ScalarResult, func, Result, Row
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
@@ -110,4 +110,20 @@ class SqlaAdvertisementReader(AdvertisementQueryGateway):
         except SQLAlchemyError as error:
             raise ReaderError(
                 'Database query advertisement by id failed.',
+            ) from error
+
+    @override
+    async def count_of_user_advertisements(self, user_id: int) -> int:
+        statement = (
+            select(func.count(SqlaAdvertisement))
+            .where(SqlaAdvertisement.user_id == user_id)
+        )
+        try:
+            result: Result[tuple[int]] = await self.session.execute(
+                statement,
+            )
+            return result.first()[0] or 0
+        except SQLAlchemyError as error:
+            raise ReaderError(
+                'Database count of user advertisements failed.',
             ) from error

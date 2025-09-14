@@ -32,3 +32,10 @@ class RedisTextsDataMapper(TextsCommandGateway):
             await self.redis.set('adbot:community_url', url)
         except RedisError as error:
             raise DataMapperError('Failed to set community URL') from error
+
+    @override
+    async def set_start_text(self, text: str) -> None:
+        try:
+            await self.redis.set('adbot:start_text', text)
+        except RedisError as error:
+            raise DataMapperError('Failed to set start text') from error

@@ -12,3 +12,6 @@ class TextsQueryGateway(Protocol):
 
     @abstractmethod
     async def read_community_url(self) -> str | None: ...
+
+    @abstractmethod
+    async def read_start_text(self) -> str | None: ...

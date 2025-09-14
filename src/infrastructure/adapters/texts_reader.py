@@ -32,3 +32,10 @@ class RedisTextsReader(TextsQueryGateway):
             return await self.redis.get('adbot:community_url')
         except RedisError as error:
             raise ReaderError('Failed to get community URL') from error
+
+    @override
+    async def read_start_text(self) -> str | None:
+        try:
+            return await self.redis.get('adbot:start_text')
+        except RedisError as error:
+            raise ReaderError('Failed to get start text') from error

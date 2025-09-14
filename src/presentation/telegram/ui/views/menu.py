@@ -1,22 +1,31 @@
 from decimal import Decimal
 
-from aiogram.types import User, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
+from domain.entities.user import User
 from presentation.telegram.ui.views.base import TextView
 
 
 class MenuView(TextView):
 
-    def __init__(self, user: User, ads_count: int, balance: Decimal):
+    def __init__(
+        self,
+        *,
+        user: User,
+        advertisements_count: int,
+        balance: Decimal,
+        community_url: str | None,
+    ):
         self.user = user
-        self.ads_count = ads_count
+        self.advertisements_count = advertisements_count
         self.balance = balance
+        self.community_url = community_url
 
     def get_text(self) -> str:
         return (
-            f"👋 Привет, {self.user.username or self.user.full_name}!\n\n"
+            f"👋 Привет, {self.user.name.value}!\n\n"
             f"Шаблонный текст\n\n"
-            f"Размещено объявлений: {self.ads_count}\n"
+            f"Размещено объявлений: {self.advertisements_count}\n"
             f"Баланс: {self.balance} KGS"
         )
 
@@ -33,14 +42,22 @@ class MenuView(TextView):
             text="💵 Платежи",
             callback_data="payments",
         )
+        rows = [
+            [create_advertisement_button],
+            [view_advertisements_button, payments_button],
+        ]
         support_button = InlineKeyboardButton(
             text="💬 Поддержка",
             callback_data="support",
         )
-        community_button = InlineKeyboardButton(
-            text="🌐 Комьюнити",
-            url="https://t.me/your_community_link",
-        )
+        row = [support_button]
+        if self.community_url is not None:
+            community_button = InlineKeyboardButton(
+                text="🌐 Комьюнити",
+                url=self.community_url,
+            )
+            row.append(community_button)
+        rows.append(row)
         my_car_button = InlineKeyboardButton(
             text="🚗 Мой автомобиль",
             callback_data="my_car",
@@ -49,11 +66,5 @@ class MenuView(TextView):
             text="📜 Правила",
             callback_data="rules",
         )
-        return InlineKeyboardMarkup(
-            inline_keyboard=[
-                [create_advertisement_button],
-                [view_advertisements_button, payments_button],
-                [support_button, community_button],
-                [my_car_button, rules_button],
-            ],
-        )
+        rows.append([my_car_button, rules_button])
+        return InlineKeyboardMarkup(inline_keyboard=rows)

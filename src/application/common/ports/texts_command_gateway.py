@@ -12,3 +12,6 @@ class TextsCommandGateway(Protocol):
 
     @abstractmethod
     async def set_community_url(self, url: str) -> None: ...
+
+    @abstractmethod
+    async def set_start_text(self, text: str) -> None: ...
