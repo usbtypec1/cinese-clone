@@ -3,6 +3,7 @@ from collections.abc import Iterable
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
+from domain.entities.advertisement import Advertisement
 from infrastructure.sqla.models.advertisement import (
     AdvertisementType,
     ProductCondition,
@@ -228,5 +229,36 @@ class AdvertisementCreateConfirmView(TextView):
 
 class AdvertisementView(TextView):
 
-    def __init__(self):
-        pass
+    def __init__(
+        self,
+        advertisement: Advertisement,
+    ):
+        self.__advertisement = advertisement
+
+    def get_text(self) -> str:
+        lines = [
+            f'#{self.__advertisement.category.hashtag.value}',
+            f'{self.__advertisement.type},'
+            f' {self.__advertisement.product_condition.value}'
+            f' | {self.__advertisement.id_.value}',
+            f'{self.__advertisement.user.name.value},'
+            f' {self.__advertisement.city.name.value}',
+            f'<b>{self.__advertisement.title.value}</b>',
+            f'<i>{self.__advertisement.description.value}</i>\n',
+            f'{self.__advertisement.price.value} KGS |'
+            f' {self.__advertisement.delivery_option.value}\n',
+        ]
+        if self.__advertisement.is_phone_number_visible.value:
+            lines.append(
+                '📲 <span class="tg-spoiler">'
+                f'{self.__advertisement.user.phone_number.value}</span>\n',
+            )
+        else:
+            lines.append(f'📲 <span class="tg-spoiler">Скрыт</span>\n')
+        lines.append('📢 Разместить объявление')
+        if self.__advertisement.user.username.value is not None:
+            lines.append(
+                f' @'
+                f'{self.__advertisement.user.username.value}',
+            )
+        return '\n'.join(lines)

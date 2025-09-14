@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from decimal import Decimal
 
 from domain.exceptions.base import DomainFieldError
 from domain.value_objects.base import ValueObject
@@ -11,7 +12,7 @@ class AdvertisementPrice(ValueObject):
         DomainFieldError.
     """
 
-    value: int
+    value: Decimal
 
     def __post_init__(self):
         super().__post_init__()
