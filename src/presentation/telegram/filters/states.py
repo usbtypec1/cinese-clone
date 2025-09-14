@@ -18,3 +18,8 @@ class AdvertisementCreateStates(StatesGroup):
     city = State()
     phone_number_visibility = State()
     confirm = State()
+
+
+class RegisterUserStates(StatesGroup):
+    name = State()
+    phone_number = State()

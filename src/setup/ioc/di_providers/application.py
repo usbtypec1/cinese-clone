@@ -26,6 +26,7 @@ from application.common.ports.texts_command_gateway import TextsCommandGateway
 from application.common.ports.texts_query_gateway import TextsQueryGateway
 from application.common.ports.transaction_manager import TransactionManager
 from application.common.ports.user_command_gateway import UserCommandGateway
+from application.common.ports.user_query_gateway import UserQueryGateway
 from application.queries.list_categories import ListCategoriesQuery
 from application.queries.list_cities import ListCitiesQuery
 from application.queries.read_advertisement_by_id import (
@@ -34,6 +35,7 @@ from application.queries.read_advertisement_by_id import (
 from application.queries.read_advertisements_count import \
     ReadAdvertisementsCountQuery
 from application.queries.read_community_url import ReadCommunityUrlQuery
+from application.queries.read_current_user import ReadCurrentUserQuery
 from application.queries.read_rules_text import ReadRulesTextQuery
 from application.queries.read_start_text import ReadStartTextQuery
 from application.queries.read_support_text import ReadSupportTextQuery
@@ -50,6 +52,7 @@ from infrastructure.adapters.texts_data_mapper import RedisTextsDataMapper
 from infrastructure.adapters.texts_reader import RedisTextsReader
 from infrastructure.adapters.transaction_manager import SqlaTransactionManager
 from infrastructure.adapters.user_data_mapper import SqlaUserDataMapper
+from infrastructure.adapters.user_reader import SqlaUserReader
 from setup.config.telegram_bot import TelegramBotSettings
 
 
@@ -108,6 +111,10 @@ class ApplicationProvider(Provider):
         source=RedisTextsReader,
         provides=TextsQueryGateway,
     )
+    user_query_gateway = provide(
+        source=SqlaUserReader,
+        provides=UserQueryGateway,
+    )
 
     commands = provide_all(
         CreateUserInteractor,
@@ -127,4 +134,5 @@ class ApplicationProvider(Provider):
         ReadCommunityUrlQuery,
         ReadAdvertisementsCountQuery,
         ReadStartTextQuery,
+        ReadCurrentUserQuery,
     )
