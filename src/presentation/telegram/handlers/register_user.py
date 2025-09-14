@@ -4,7 +4,7 @@ from decimal import Decimal
 from aiogram import Router, F
 from aiogram.filters import ExceptionTypeFilter, StateFilter
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ErrorEvent, Message
+from aiogram.types import ErrorEvent, Message, ReplyKeyboardRemove
 from dishka import FromDishka
 
 from application.commands.create_user import CreateUserInteractor, \
@@ -73,6 +73,10 @@ async def on_user_phone_number_entered(
         ),
     )
     await state.clear()
+    await message.answer(
+        'Вы успешно прошли регистрацию!',
+        reply_markup=ReplyKeyboardRemove(),
+    )
 
     advertisements_count = await read_advertisements_count_query.execute(
         user_id=message.from_user.id,
