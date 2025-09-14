@@ -39,3 +39,15 @@ async def answer_view(message: Message, view: View) -> Message:
     match view:
         case TextView():
             return await answer_text_view(message=message, view=view)
+
+
+async def edit_message_by_view(
+    message: Message,
+    view: View,
+) -> Message:
+    match view:
+        case TextView():
+            return await message.edit_text(
+                text=view.get_text(),
+                reply_markup=view.get_reply_markup(),
+            )

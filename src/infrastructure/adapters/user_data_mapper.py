@@ -8,7 +8,7 @@ from domain.entities.user import User
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class UserDataMapper(UserCommandGateway):
+class SqlaUserDataMapper(UserCommandGateway):
     session: AsyncSession
 
     @override

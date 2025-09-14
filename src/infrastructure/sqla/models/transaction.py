@@ -1,15 +1,10 @@
 from decimal import Decimal
-from typing import TYPE_CHECKING
 from uuid import UUID, uuid4
 
 from sqlalchemy import ForeignKey, String, CheckConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from infrastructure.sqla.models.base import Base
-
-
-if TYPE_CHECKING:
-    from infrastructure.sqla.models.user import User  # noqa: F401
 
 
 class Transaction(Base):
@@ -24,11 +19,6 @@ class Transaction(Base):
     )
     amount: Mapped[Decimal]
     description: Mapped[str] = mapped_column(String(255))
-
-    user: Mapped['User'] = relationship(
-        'User',
-        back_populates='transactions',
-    )
 
     __table_args__ = (
         CheckConstraint("amount > 0", name="ck_transactions_amount_positive"),

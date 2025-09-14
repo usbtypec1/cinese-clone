@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, PostgresDsn
 
 
 class DatabaseSettings(BaseModel):
@@ -9,8 +9,12 @@ class DatabaseSettings(BaseModel):
     database: str
 
     @property
-    def url(self) -> str:
-        return (
-            f"postgresql+psycopg://{self.user}:{self.password}"
-            f"@{self.host}:{self.port}/{self.database}"
+    def dsn(self) -> PostgresDsn:
+        return PostgresDsn.build(
+            scheme="postgresql+psycopg",
+            username=self.user,
+            password=self.password,
+            host=self.host,
+            port=self.port,
+            path=self.database,
         )

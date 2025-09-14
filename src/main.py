@@ -1,23 +1,29 @@
 import asyncio
+import sys
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
+from aiogram.enums import ParseMode
 from dishka import make_async_container
 from dishka.integrations.aiogram import setup_dishka
-from sqlalchemy.ext.asyncio import AsyncEngine
 
-from infrastructure.sqla.models.base import Base
 from presentation.telegram.handlers.registry import get_routers
 from setup.config.settings import load_app_settings, AppSettings
+from setup.ioc.di_providers.registry import get_providers
 
 
 async def main() -> None:
     settings = load_app_settings()
 
     container = make_async_container(
+        *get_providers(),
         context={AppSettings: settings},
     )
 
-    bot = Bot(token=settings.telegram_bot.token)
+    bot = Bot(
+        token=settings.telegram_bot.token,
+        default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+    )
     dispatcher = Dispatcher()
     dispatcher.include_routers(*get_routers())
 
@@ -25,12 +31,10 @@ async def main() -> None:
 
     setup_dishka(container=container, router=dispatcher, auto_inject=True)
 
-    engine = await container.get(AsyncEngine)
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
     await dispatcher.start_polling(bot)
 
 
 if __name__ == "__main__":
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     asyncio.run(main())

@@ -1,7 +1,8 @@
 from dishka import Provider
+from dishka.integrations.aiogram import AiogramProvider
 
 from setup.ioc.di_providers.application import ApplicationProvider
-from setup.ioc.di_providers.infrastructure import InfrastructureProvider
+from setup.ioc.di_providers.infrastructure import infrastructure_provider
 from setup.ioc.di_providers.settings import SettingsProvider
 
 
@@ -9,5 +10,6 @@ def get_providers() -> tuple[Provider, ...]:
     return (
         SettingsProvider(),
         ApplicationProvider(),
-        InfrastructureProvider(),
+        infrastructure_provider(),
+        AiogramProvider(),
     )

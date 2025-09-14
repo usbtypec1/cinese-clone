@@ -4,10 +4,20 @@ from dishka.integrations.aiogram import AiogramMiddlewareData
 
 from application.commands.create_user import CreateUserInteractor
 from application.commands.send_to_admins import SendToTelegramAdminsInteractor
+from application.common.ports.category_query_gateway import (
+    CategoryQueryGateway,
+)
+from application.common.ports.city_query_gateway import CityQueryGateway
 from application.common.ports.flusher import Flusher
 from application.common.ports.transaction_manager import TransactionManager
+from application.common.ports.user_command_gateway import UserCommandGateway
+from application.queries.list_categories import ListCategoriesQuery
+from application.queries.list_cities import ListCitiesQuery
+from infrastructure.adapters.category_reader import SqlaCategoryReader
+from infrastructure.adapters.city_reader import SqlaCityReader
 from infrastructure.adapters.flusher import SqlaFlusher
 from infrastructure.adapters.transaction_manager import SqlaTransactionManager
+from infrastructure.adapters.user_data_mapper import SqlaUserDataMapper
 from setup.config.telegram_bot import TelegramBotSettings
 
 
@@ -35,6 +45,24 @@ class ApplicationProvider(Provider):
         provides=Flusher,
     )
 
+    user_command_gateway = provide(
+        source=SqlaUserDataMapper,
+        provides=UserCommandGateway,
+    )
+    category_query_gateway = provide(
+        source=SqlaCategoryReader,
+        provides=CategoryQueryGateway,
+    )
+    city_query_gateway = provide(
+        source=SqlaCityReader,
+        provides=CityQueryGateway,
+    )
+
     commands = provide_all(
         CreateUserInteractor,
+    )
+
+    queries = provide_all(
+        ListCategoriesQuery,
+        ListCitiesQuery,
     )

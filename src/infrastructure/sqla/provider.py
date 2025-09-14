@@ -1,6 +1,7 @@
 import logging
 from collections.abc import AsyncIterator
 
+from pydantic import PostgresDsn
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -13,14 +14,14 @@ log = logging.getLogger(__name__)
 
 
 async def get_async_engine(
-    url: str,
+    dsn: PostgresDsn,
 ) -> AsyncIterator[AsyncEngine]:
     async_engine = create_async_engine(
-        url=url,
+        url=str(dsn),
         connect_args={"connect_timeout": 5},
         pool_pre_ping=True,
     )
-    log.debug("Async engine created with DSN: %s", url)
+    log.debug("Async engine created.")
     yield async_engine
     log.debug("Disposing async engine...")
     await async_engine.dispose()

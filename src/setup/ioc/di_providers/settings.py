@@ -1,4 +1,5 @@
 from dishka import Provider, Scope, from_context, provide
+from pydantic import PostgresDsn
 
 from setup.config.database import DatabaseSettings
 from setup.config.settings import AppSettings
@@ -23,3 +24,7 @@ class SettingsProvider(Provider):
         settings: AppSettings,
     ) -> DatabaseSettings:
         return settings.database
+
+    @provide
+    def provide_postgres_dsn(self, settings: AppSettings) -> PostgresDsn:
+        return settings.database.dsn

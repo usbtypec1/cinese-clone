@@ -1,21 +1,12 @@
 from decimal import Decimal
-from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, String, CheckConstraint
-from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.orm import Mapped, mapped_column
 
 from domain.enums.advertisement_type import AdvertisementType
 from domain.enums.delivery_option import DeliveryOption
 from domain.enums.product_condition import ProductCondition
 from infrastructure.sqla.models.base import Base
-
-
-if TYPE_CHECKING:
-    from infrastructure.sqla.models.advertisement_photo import (  # noqa: F401
-        AdvertisementPhoto
-    )
-    from infrastructure.sqla.models.city import City  # noqa: F401
-    from infrastructure.sqla.models.user import User  # noqa: F401
 
 
 class Advertisement(Base):
@@ -38,20 +29,6 @@ class Advertisement(Base):
         ForeignKey('cities.id', ondelete='CASCADE'),
     )
     is_phone_number_visible: Mapped[bool]
-
-    user: Mapped['User'] = relationship(
-        'User',
-        back_populates='transactions',
-    )
-    photos: Mapped[list['AdvertisementPhoto']] = relationship(
-        'AdvertisementPhoto',
-        back_populates='advertisement',
-        cascade='all, delete-orphan',
-    )
-    city: Mapped['City'] = relationship(
-        'City',
-        back_populates='advertisements',
-    )
 
     __table_args__ = (
         CheckConstraint(
