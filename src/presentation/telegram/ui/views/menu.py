@@ -14,17 +14,19 @@ class MenuView(TextView):
         user: User,
         advertisements_count: int,
         balance: Decimal,
+        start_text: str | None = None,
         community_url: str | None,
     ):
         self.user = user
         self.advertisements_count = advertisements_count
         self.balance = balance
+        self.start_text = start_text or ''
         self.community_url = community_url
 
     def get_text(self) -> str:
         return (
             f"👋 Привет, {self.user.name.value}!\n\n"
-            f"Шаблонный текст\n\n"
+            f"{self.start_text}\n\n"
             f"Размещено объявлений: {self.advertisements_count}\n"
             f"Баланс: {self.balance} KGS"
         )
