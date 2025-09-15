@@ -2,10 +2,14 @@ from aiogram import Bot
 from dishka import Provider, Scope, provide, provide_all
 from dishka.integrations.aiogram import AiogramMiddlewareData
 
+from application.commands.add_photo_to_cache import AddPhotoToCacheInteractor
+from application.commands.clear_photo_cache import ClearPhotosCacheInteractor
 from application.commands.create_advertisement import (
     CreateAdvertisementInteractor,
 )
 from application.commands.create_user import CreateUserInteractor
+from application.commands.remove_photo_from_cache import \
+    RemovePhotoFromCacheInteractor
 from application.commands.send_to_admins import SendToTelegramAdminsInteractor
 from application.commands.set_community_url import SetCommunityUrlCommand
 from application.commands.set_rules_text import SetRulesTextCommand
@@ -22,6 +26,7 @@ from application.common.ports.category_query_gateway import (
 )
 from application.common.ports.city_query_gateway import CityQueryGateway
 from application.common.ports.flusher import Flusher
+from application.common.ports.photos_cache_gateway import PhotosCacheGateway
 from application.common.ports.texts_command_gateway import TextsCommandGateway
 from application.common.ports.texts_query_gateway import TextsQueryGateway
 from application.common.ports.transaction_manager import TransactionManager
@@ -49,6 +54,7 @@ from infrastructure.adapters.advertisement_reader import (
 from infrastructure.adapters.category_reader import SqlaCategoryReader
 from infrastructure.adapters.city_reader import SqlaCityReader
 from infrastructure.adapters.flusher import SqlaFlusher
+from infrastructure.adapters.photos_cache import RedisPhotosCache
 from infrastructure.adapters.texts_data_mapper import RedisTextsDataMapper
 from infrastructure.adapters.texts_reader import RedisTextsReader
 from infrastructure.adapters.transaction_manager import SqlaTransactionManager
@@ -116,6 +122,10 @@ class ApplicationProvider(Provider):
         source=SqlaUserReader,
         provides=UserQueryGateway,
     )
+    photos_cache_gateway = provide(
+        provides=PhotosCacheGateway,
+        source=RedisPhotosCache,
+    )
 
     commands = provide_all(
         CreateUserInteractor,
@@ -124,6 +134,9 @@ class ApplicationProvider(Provider):
         SetSupportTextCommand,
         SetCommunityUrlCommand,
         SetStartTextInteractor,
+        AddPhotoToCacheInteractor,
+        RemovePhotoFromCacheInteractor,
+        ClearPhotosCacheInteractor,
     )
 
     queries = provide_all(
