@@ -22,9 +22,6 @@ from presentation.telegram.ui.views.register_user import RegisterUserNameView
 user_start_router = Router(name=__name__)
 user_start_router.message.filter(user_filter)
 
-admin_start_router = Router(name=__name__)
-admin_start_router.message.filter(admin_filter)
-
 
 @user_start_router.message(CommandStart())
 async def on_start_command(

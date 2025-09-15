@@ -70,3 +70,27 @@ class MenuView(TextView):
         )
         rows.append([my_car_button, rules_button])
         return InlineKeyboardMarkup(inline_keyboard=rows)
+
+
+class AdminMenuView(TextView):
+    text = 'Админ-панель'
+    reply_markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text='Объявления',
+                    callback_data='admin_advertisements',
+                ),
+                InlineKeyboardButton(
+                    text='Пользователи',
+                    callback_data='admin_users',
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text='Тексты',
+                    callback_data='admin_texts',
+                )
+            ]
+        ],
+    )
