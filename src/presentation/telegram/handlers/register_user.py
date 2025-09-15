@@ -7,18 +7,28 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import ErrorEvent, Message, ReplyKeyboardRemove
 from dishka import FromDishka
 
-from application.commands.create_user import CreateUserInteractor, \
-    CreateUserRequest
-from application.queries.read_advertisements_count import \
-    ReadAdvertisementsCountQuery
+from application.commands.create_user import (
+    CreateUserInteractor,
+    CreateUserRequest,
+)
+from application.queries.read_advertisements_count import (
+    ReadAdvertisementsCountQuery,
+)
 from application.queries.read_community_url import ReadCommunityUrlQuery
+from application.queries.read_current_user import ReadCurrentUserQuery
 from application.queries.read_start_text import ReadStartTextQuery
 from domain.exceptions.user import UserNotFoundByIdError
 from presentation.telegram.filters.states import RegisterUserStates
-from presentation.telegram.ui.views.base import answer_view
+from presentation.telegram.ui.views.base import (
+    answer_view,
+    edit_message_by_view,
+)
 from presentation.telegram.ui.views.menu import MenuView
-from presentation.telegram.ui.views.register_user import \
-    RegisterUserPhoneNumberView
+from presentation.telegram.ui.views.register_user import (
+    RegisterUserPhoneNumberView,
+    UserNotRegisteredView,
+    RegisterUserNameView,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -37,6 +47,20 @@ async def on_user_not_found_by_id_error(event: ErrorEvent) -> None:
     else:
         logger.debug('User not found handler: invalid update type.')
         return
+    view = UserNotRegisteredView()
+    await answer_view(message, view)
+
+
+@register_user_router.callback_query(
+    F.data == 'register_user_start',
+)
+async def on_register_user_start_button(
+    callback_query: F.CallbackQuery,
+    state: FSMContext,
+) -> None:
+    await state.set_state(RegisterUserStates.name)
+    view = RegisterUserNameView()
+    await edit_message_by_view(callback_query.message, view)
 
 
 @register_user_router.message(
@@ -61,6 +85,7 @@ async def on_user_phone_number_entered(
     read_advertisements_count_query: FromDishka[ReadAdvertisementsCountQuery],
     read_start_text_query: FromDishka[ReadStartTextQuery],
     read_community_url_query: FromDishka[ReadCommunityUrlQuery],
+    read_current_user_query: FromDishka[ReadCurrentUserQuery],
 ) -> None:
     state_data: dict = await state.get_data()
     name = state_data['name']
@@ -74,17 +99,18 @@ async def on_user_phone_number_entered(
     )
     await state.clear()
     await message.answer(
-        'Вы успешно прошли регистрацию!',
+        '✅ Вы успешно прошли регистрацию!',
         reply_markup=ReplyKeyboardRemove(),
     )
 
+    user = await read_current_user_query.execute()
     advertisements_count = await read_advertisements_count_query.execute(
         user_id=message.from_user.id,
     )
     start_text = await read_start_text_query.execute()
     community_url = await read_community_url_query.execute()
     view = MenuView(
-        user=message.from_user,
+        user=user,
         advertisements_count=advertisements_count,
         start_text=start_text,
         balance=Decimal(0),
