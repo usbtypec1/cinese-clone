@@ -9,7 +9,7 @@ from application.commands.create_user import CreateUserInteractor
 from application.commands.send_to_admins import SendToTelegramAdminsInteractor
 from application.commands.set_community_url import SetCommunityUrlCommand
 from application.commands.set_rules_text import SetRulesTextCommand
-from application.commands.set_start_text import SetStartTextCommand
+from application.commands.set_start_text import SetStartTextInteractor
 from application.commands.set_support_text import SetSupportTextCommand
 from application.common.ports.advertisement_command_gateway import (
     AdvertisementCommandGateway,
@@ -123,7 +123,7 @@ class ApplicationProvider(Provider):
         SetRulesTextCommand,
         SetSupportTextCommand,
         SetCommunityUrlCommand,
-        SetStartTextCommand,
+        SetStartTextInteractor,
     )
 
     queries = provide_all(

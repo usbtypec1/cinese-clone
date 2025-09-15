@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 async def get_redis_client(redis_dsn: RedisDsn) -> AsyncIterator[Redis]:
-    redis = Redis.from_url(str(redis_dsn))
+    redis = Redis.from_url(str(redis_dsn), decode_responses=True)
     logger.debug("Redis client created.")
     yield redis
     logger.debug("Closing Redis client...")

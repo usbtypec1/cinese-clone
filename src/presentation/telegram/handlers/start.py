@@ -12,7 +12,6 @@ from application.queries.read_community_url import ReadCommunityUrlQuery
 from application.queries.read_current_user import ReadCurrentUserQuery
 from application.queries.read_start_text import ReadStartTextQuery
 from domain.exceptions.user import UserNotFoundByIdError
-from presentation.telegram.filters.permissions import user_filter, admin_filter
 from presentation.telegram.filters.states import RegisterUserStates
 from presentation.telegram.ui.views.base import answer_view
 from presentation.telegram.ui.views.menu import MenuView
@@ -20,7 +19,6 @@ from presentation.telegram.ui.views.register_user import RegisterUserNameView
 
 
 user_start_router = Router(name=__name__)
-user_start_router.message.filter(user_filter)
 
 
 @user_start_router.message(CommandStart())

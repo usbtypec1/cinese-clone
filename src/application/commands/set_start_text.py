@@ -4,7 +4,7 @@ from application.common.ports.texts_command_gateway import TextsCommandGateway
 
 
 @dataclass(frozen=True, slots=True, kw_only=True)
-class SetStartTextCommand:
+class SetStartTextInteractor:
     texts_command_gateway: TextsCommandGateway
 
     async def execute(self, start_text: str) -> None:

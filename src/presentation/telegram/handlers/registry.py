@@ -12,7 +12,6 @@ def get_routers() -> tuple[Router, ...]:
     return (
         help_router,
         register_user_router,
-        admin_router,
         user_start_router,
         payments_router,
         advertisement_router,

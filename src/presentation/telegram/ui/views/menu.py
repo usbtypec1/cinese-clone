@@ -89,8 +89,40 @@ class AdminMenuView(TextView):
             [
                 InlineKeyboardButton(
                     text='Тексты',
-                    callback_data='admin_texts',
+                    callback_data='admin_help_texts',
                 )
             ]
+        ],
+    )
+
+
+class AdminTextsMenuView(TextView):
+    text = 'Тексты'
+    reply_markup = InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text='Поменять стартовый текст',
+                    callback_data='admin_edit_start_text',
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text='Поменять текст правил',
+                    callback_data='admin_edit_rules_text',
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text='Поменять текст поддержки',
+                    callback_data='admin_edit_support_text',
+                ),
+            ],
+            [
+                InlineKeyboardButton(
+                    text='Поменять ссылку на комьюнити',
+                    callback_data='admin_edit_community_url',
+                ),
+            ],
         ],
     )

@@ -23,3 +23,19 @@ class AdvertisementCreateStates(StatesGroup):
 class RegisterUserStates(StatesGroup):
     name = State()
     phone_number = State()
+
+
+class EditStartTextStates(StatesGroup):
+    text = State()
+
+
+class EditSupportTextStates(StatesGroup):
+    text = State()
+
+
+class EditCommunityUrlStates(StatesGroup):
+    url = State()
+
+
+class EditRulesTextStates(StatesGroup):
+    text = State()
