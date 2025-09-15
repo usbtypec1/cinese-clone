@@ -27,6 +27,7 @@ from application.common.ports.texts_query_gateway import TextsQueryGateway
 from application.common.ports.transaction_manager import TransactionManager
 from application.common.ports.user_command_gateway import UserCommandGateway
 from application.common.ports.user_query_gateway import UserQueryGateway
+from application.queries.list_advertisements import ListAdvertisementsQuery
 from application.queries.list_categories import ListCategoriesQuery
 from application.queries.list_cities import ListCitiesQuery
 from application.queries.read_advertisement_by_id import (
@@ -135,4 +136,5 @@ class ApplicationProvider(Provider):
         ReadAdvertisementsCountQuery,
         ReadStartTextQuery,
         ReadCurrentUserQuery,
+        ListAdvertisementsQuery,
     )

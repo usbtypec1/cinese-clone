@@ -11,3 +11,12 @@ class AdvertisementQueryGateway(Protocol):
 
     @abstractmethod
     async def count_of_user_advertisements(self, user_id: int) -> int: ...
+
+    @abstractmethod
+    async def read_all(
+        self,
+        *,
+        user_id: int,
+        limit: int,
+        offset: int,
+    ) -> list[Advertisement]: ...

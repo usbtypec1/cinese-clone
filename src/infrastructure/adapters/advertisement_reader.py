@@ -58,10 +58,11 @@ class SqlaAdvertisementReader(AdvertisementQueryGateway):
                     SqlaAdvertisement.photos,
                 ),
             )
+            .where(SqlaAdvertisement.id == id_)
         )
         try:
-            result: ScalarResult[SqlaAdvertisement] = (
-                await self.session.scalars(statement)
+            result: Result[tuple[SqlaAdvertisement]] = (
+                await self.session.execute(statement)
             )
             row: SqlaAdvertisement | None = result.first()
 
@@ -126,4 +127,79 @@ class SqlaAdvertisementReader(AdvertisementQueryGateway):
         except SQLAlchemyError as error:
             raise ReaderError(
                 'Database count of user advertisements failed.',
+            ) from error
+
+    @override
+    async def read_all(
+        self,
+        *,
+        user_id: int,
+        limit: int,
+        offset: int,
+    ) -> list[Advertisement]:
+        statement = (
+            select(SqlaAdvertisement)
+            .where(SqlaAdvertisement.user_id == user_id)
+            .limit(limit)
+            .offset(offset)
+            .options(
+                joinedload(
+                    SqlaAdvertisement.user,
+                    SqlaAdvertisement.city,
+                    SqlaAdvertisement.category,
+                    SqlaAdvertisement.photos,
+                ),
+            )
+        )
+        try:
+            result: Result[tuple[SqlaAdvertisement]] = (
+                await self.session.execute(statement)
+            )
+            rows = result.scalars().all()
+
+            return [
+                Advertisement(
+                    id_=AdvertisementId(row.id),
+                    user=User(
+                        id_=UserId(row.user.id),
+                        name=UserName(row.user.name),
+                        username=UserUsername(row.user.username),
+                        phone_number=UserPhoneNumber(row.user.phone_number),
+                    ),
+                    type_=AdvertisementType(row.type),
+                    title=AdvertisementTitle(row.title),
+                    description=AdvertisementDescription(row.description),
+                    product_condition=ProductCondition(row.product_condition),
+                    price=AdvertisementPrice(row.price),
+                    delivery_option=DeliveryOption(row.delivery_option),
+                    city=City(
+                        id_=CityId(row.city.id),
+                        name=CityName(row.city.name),
+                    ),
+                    category=Category(
+                        id_=CategoryId(row.category.id),
+                        name=CategoryName(row.category.name),
+                        hashtag=CategoryHashtag(row.category.hashtag),
+                    ),
+                    is_phone_number_visible=IsPhoneNumberVisible(
+                        row.is_phone_number_visible,
+                    ),
+                    photos=[
+                        AdvertisementPhoto(
+                            id_=AdvertisementPhotoId(photo.id),
+                            advertisement_id=AdvertisementId(
+                                photo.advertisement_id,
+                            ),
+                            file_id=FileId(photo.file_id),
+                            file_unique_id=FileUniqueId(photo.file_unique_id),
+                        )
+                        for photo in row.photos
+                    ],
+                )
+                for row in result
+            ]
+
+        except SQLAlchemyError as error:
+            raise ReaderError(
+                'Database query advertisement by id failed.',
             ) from error
