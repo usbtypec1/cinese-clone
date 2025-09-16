@@ -11,7 +11,6 @@ from application.common.types import CurrentUserId
 class RedisPhotosCache(PhotosCacheGateway):
     redis: Redis
     user_id: CurrentUserId
-    max_size: int = 10  # cache limit
 
     @property
     def key(self) -> str:
@@ -29,12 +28,13 @@ class RedisPhotosCache(PhotosCacheGateway):
 
     @override
     async def add(self, file_id: str) -> None:
+        max_size = 10
         # ensure uniqueness: remove if already exists
         await self.redis.lrem(self.key, 0, file_id)
         # push new file_id at the end (right)
         await self.redis.rpush(self.key, file_id)
         # keep only last max_size items
-        await self.redis.ltrim(self.key, -self.max_size, -1)
+        await self.redis.ltrim(self.key, -max_size, -1)
 
     @override
     async def remove_all(self) -> None:

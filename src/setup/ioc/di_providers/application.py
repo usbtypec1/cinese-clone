@@ -8,8 +8,9 @@ from application.commands.create_advertisement import (
     CreateAdvertisementInteractor,
 )
 from application.commands.create_user import CreateUserInteractor
-from application.commands.remove_photo_from_cache import \
-    RemovePhotoFromCacheInteractor
+from application.commands.remove_photo_from_cache import (
+    RemovePhotoFromCacheInteractor,
+)
 from application.commands.send_to_admins import SendToTelegramAdminsInteractor
 from application.commands.set_community_url import SetCommunityUrlCommand
 from application.commands.set_rules_text import SetRulesTextCommand
@@ -38,8 +39,9 @@ from application.queries.list_cities import ListCitiesQuery
 from application.queries.read_advertisement_by_id import (
     ReadAdvertisementByIdQuery,
 )
-from application.queries.read_advertisements_count import \
-    ReadAdvertisementsCountQuery
+from application.queries.read_advertisements_count import (
+    ReadAdvertisementsCountQuery,
+)
 from application.queries.read_community_url import ReadCommunityUrlQuery
 from application.queries.read_current_user import ReadCurrentUserQuery
 from application.queries.read_rules_text import ReadRulesTextQuery

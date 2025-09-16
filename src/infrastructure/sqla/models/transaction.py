@@ -4,6 +4,7 @@ from uuid import UUID, uuid4
 from sqlalchemy import ForeignKey, String, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
+from domain.enums.transaction_type import TransactionType
 from infrastructure.sqla.models.base import Base
 
 
@@ -19,6 +20,7 @@ class Transaction(Base):
     )
     amount: Mapped[Decimal]
     description: Mapped[str] = mapped_column(String(255))
+    type: Mapped[TransactionType]
 
     __table_args__ = (
         CheckConstraint("amount > 0", name="ck_transactions_amount_positive"),

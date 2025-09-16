@@ -39,3 +39,8 @@ class EditCommunityUrlStates(StatesGroup):
 
 class EditRulesTextStates(StatesGroup):
     text = State()
+
+
+class TopUpRequestCreateStates(StatesGroup):
+    amount = State()
+    receipt = State()
