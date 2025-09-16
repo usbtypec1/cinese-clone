@@ -6,3 +6,4 @@ from decimal import Decimal
 class TopUpRequestCreateCommandModel:
     amount: Decimal
     receipt_file_id: str
+    user_id: int

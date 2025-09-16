@@ -25,9 +25,11 @@ class SqlaTopUpRequestDataMapper(TopUpRequestCommandGateway):
     ) -> TopUpRequestId:
         request = TopUpRequest(
             amount=top_up_request.amount,
+            user_id=top_up_request.user_id,
             receipt_file_id=top_up_request.receipt_file_id,
             status=TopUpRequestStatus.PENDING,
         )
         self.session.add(request)
+        await self.session.flush()
         await self.session.refresh(request)
         return TopUpRequestId(request.id)

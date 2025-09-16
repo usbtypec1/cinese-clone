@@ -20,3 +20,7 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    top_up_requests: Mapped[list["TopUpRequest"]] = relationship(
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
