@@ -1,5 +1,6 @@
 from abc import ABC
 
+from aiogram import Bot
 from aiogram.types import (
     InlineKeyboardMarkup,
     ReplyKeyboardMarkup,
@@ -74,3 +75,40 @@ async def edit_message_by_view(
         text=view.get_text(),
         reply_markup=view.get_reply_markup(),
     )
+
+
+async def send_text_view(
+    bot: Bot,
+    chat_id: int,
+    view: TextView,
+) -> Message:
+    return await bot.send_message(
+        chat_id=chat_id,
+        text=view.get_text(),
+        reply_markup=view.get_reply_markup(),
+    )
+
+
+async def send_photo_view(
+    bot: Bot,
+    chat_id: int,
+    view: PhotoView,
+) -> Message:
+    return await bot.send_photo(
+        chat_id=chat_id,
+        photo=view.get_photo(),
+        caption=view.get_caption(),
+        reply_markup=view.get_reply_markup(),
+    )
+
+
+async def send_view(
+    bot: Bot,
+    chat_id: int,
+    view: View,
+) -> Message:
+    match view:
+        case TextView():
+            return await send_text_view(bot=bot, chat_id=chat_id, view=view)
+        case PhotoView():
+            return await send_photo_view(bot=bot, chat_id=chat_id, view=view)

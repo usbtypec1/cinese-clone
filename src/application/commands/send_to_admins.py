@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from aiogram import Bot
 from aiogram.exceptions import TelegramAPIError
 
-from presentation.telegram.ui.views.base import View
+from presentation.telegram.ui.views.base import View, send_view
 
 
 logger = logging.getLogger(__name__)
@@ -16,15 +16,12 @@ class SendToTelegramAdminsInteractor:
     bot: Bot
 
     async def execute(self, view: View) -> None:
-        text = view.get_text()
-        reply_markup = view.get_reply_markup()
-
         for chat_id in self.admin_chat_ids:
             try:
-                await self.bot.send_message(
+                await send_view(
+                    bot=self.bot,
                     chat_id=chat_id,
-                    text=text,
-                    reply_markup=reply_markup,
+                    view=view,
                 )
             except TelegramAPIError as error:
                 logger.error(

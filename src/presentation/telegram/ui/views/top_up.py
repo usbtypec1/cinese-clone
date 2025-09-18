@@ -1,5 +1,14 @@
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 from domain.entities.top_up_request import TopUpRequest
-from presentation.telegram.ui.views.base import TextView, PhotoView
+from presentation.telegram.filters.callback_data.top_up_request import \
+    (
+    TopUpRequestAcceptCallbackData, TopUpRequestRejectCallbackData,
+)
+from presentation.telegram.ui.views.base import (
+    TextView, PhotoView,
+    ReplyMarkup,
+)
 
 
 class TopUpAmountView(TextView):
@@ -24,7 +33,7 @@ class TopUpRequestDetailPhotoView(PhotoView):
     def __init__(self, top_up_request: TopUpRequest):
         self.__top_up_request = top_up_request
 
-    def get_text(self) -> str:
+    def get_caption(self) -> str:
         return (
             f'Запрос на пополнение баланса:\n\n'
             f'Пользователь: {self.__top_up_request.user.name.value}'
@@ -34,3 +43,25 @@ class TopUpRequestDetailPhotoView(PhotoView):
 
     def get_photo(self) -> str:
         return self.__top_up_request.receipt_file_id.value
+
+    def get_reply_markup(self) -> InlineKeyboardMarkup:
+        return InlineKeyboardMarkup(
+            inline_keyboard=[
+                [
+                    InlineKeyboardButton(
+                        text='✅ Одобрить',
+                        callback_data=TopUpRequestAcceptCallbackData(
+                            top_up_request_id=self.__top_up_request.id_.value,
+                        ).pack(),
+                    ),
+                ],
+                [
+                    InlineKeyboardButton(
+                        text='❌ Отклонить',
+                        callback_data=TopUpRequestRejectCallbackData(
+                            top_up_request_id=self.__top_up_request.id_.value,
+                        ).pack(),
+                    )
+                ]
+            ],
+        )
